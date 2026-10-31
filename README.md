@@ -1,5 +1,6 @@
 # PlaywrightAutomationFramework
-
+   [![Playwright Tests](https://github.com/luisStPaul/PlaywrightProjects/actions/workflows/playwright-tests.yml/badge.svg)](https://github.com/luisStPaul/PlaywrightProjects/actions/workflows/playwright-tests.yml)
+   
 A single, config-driven C# + Playwright + NUnit framework that runs **UI tests across
 Chromium/Firefox/Webkit** and **browserless API tests** through one unified `BaseTest`.
 
