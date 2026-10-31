@@ -46,7 +46,7 @@ namespace PlaywrightAutomationFramework.Tests.Ui
             });
 
             // Navigate to the app which triggers the API call
-            await Page.GotoAsync("/");
+            await Page.GotoAsync("https://practicesoftwaretesting.com/");
 
             // Verify that some controls on the page are displayed as expected
             await Page.GetByRole(AriaRole.Button, new() { Name = "Categories" }).ClickAsync();
