@@ -1,0 +1,54 @@
+name: Playwright Tests
+
+# When to run: every push and pull request to main, plus a manual "Run workflow" button
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # 1. Download the repo onto the runner
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # 2. Install .NET 8 (matches net8.0 in the project)
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # 3. Restore packages and build
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Debug
+
+      # 4. Install Playwright browsers (Chromium, Firefox, WebKit) and their system dependencies
+      - name: Install Playwright browsers
+        run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+
+      # 5. Run all UI (x3 browsers) and API tests, saving a results file
+      - name: Run tests
+        run: dotnet test --no-build --configuration Debug --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+
+      # 6. Keep results, screenshots, videos and traces so failures can be inspected
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            TestResults/
+            bin/Debug/net8.0/**/*.png
+            bin/Debug/net8.0/**/*.webm
+            bin/Debug/net8.0/**/*.zip
+          if-no-files-found: ignore
+          retention-days: 14
