@@ -112,3 +112,6 @@ public class MyApiTests : BaseTest
   variables on top of the JSON file.
 - To point at a different environment, set `PW_ENVIRONMENT=QA` (etc.) and drop an optional
   `appsettings.QA.json` next to `appsettings.json` with just the overridden keys.
+- The UI tests need to be run with the setting 'headless: false' due to the site’s current detection
+  rules: it displays a CAPTCHA if not run in headed mode. 
+  
