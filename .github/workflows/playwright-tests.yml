@@ -35,9 +35,11 @@ jobs:
       - name: Install Playwright browsers
         run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
 
-      # 5. Run all UI (x3 browsers) and API tests, saving a results file
+      # 5. Run all UI (x3 browsers) and API tests, saving a results file.
+      #    xvfb-run gives the runner a virtual display, so headed browsers
+      #    (Headless: false in appsettings.json) can launch on a machine with no screen.
       - name: Run tests
-        run: dotnet test --no-build --configuration Debug --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+        run: xvfb-run --auto-servernum dotnet test --no-build --configuration Debug --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
 
       # 6. Keep results, screenshots, videos and traces so failures can be inspected
       - name: Upload test results
