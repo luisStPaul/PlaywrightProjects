@@ -49,8 +49,8 @@ namespace PlaywrightAutomationFramework.Tests.Ui
             await Page.GotoAsync("/");
 
             // Verify that some controls on the page are displayed as expected
-            await Page.Locator("[data-test=\"nav-categories\"]").ClickAsync();
-            await Page.Locator("[data-test=\"nav-hand-tools\"]").ClickAsync();
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Categories" }).ClickAsync();
+            await Page.GetByRole(AriaRole.Link, new() { Name = "Hand Tools" }).ClickAsync();
             await Page.Locator("[data-test=\"sort\"]").SelectOptionAsync(new[] { "name,asc" });
 
             // Verify the UI displays the modified data
