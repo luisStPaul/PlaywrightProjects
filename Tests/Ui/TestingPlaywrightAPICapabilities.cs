@@ -210,8 +210,24 @@ namespace PlaywrightAutomationFramework.Tests.Ui
 
             // The interceptor fired, and failures match the block reason
             Assert.That(blocked, Is.Not.Empty, "Route handler never intercepted an image.");
-            Assert.That(failures.All(f => f.Error == "net::ERR_BLOCKED_BY_CLIENT.Inspector"), Is.True,
+            
+            Assert.That(
+                failures.All(f =>
+                    f.Error != null &&
+                    f.Error.StartsWith("net::ERR_BLOCKED_BY_CLIENT", StringComparison.Ordinal)),
+                Is.True,
                 "Some image requests failed for a reason other than the block.");
+
+            Assert.That(failures, Is.Not.Empty,
+                "No intercepted image request reported a network failure.");
+            
+            Assert.That(
+                failures.All(f =>
+                    f.Error != null &&
+                    f.Error.StartsWith("net::ERR_BLOCKED_BY_CLIENT", StringComparison.Ordinal)),
+                Is.True,
+                () => $"Unexpected image failures: {string.Join(", ",
+                    failures.Select(f => $"{f.Url}: {f.Error}"))}");	    
 
             // No <img> actually rendered
             var loadedImages = await Page.EvaluateAsync<int>(
@@ -294,3 +310,4 @@ namespace PlaywrightAutomationFramework.Tests.Ui
         }
     }
 }
+
